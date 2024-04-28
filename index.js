@@ -37,7 +37,7 @@ async function run() {
     });
     app.get("/myArt/:email", async (req, res) => {
       const email = req.params.email;
-      const query = { userEmail: email};
+      const query = { userEmail: email };
       const result = await artCollection.find(query).toArray();
       res.send(result);
     });
@@ -48,11 +48,39 @@ async function run() {
       const result = await artCollection.findOne(query);
       res.send(result);
     });
+    app.get("/art/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await artCollection.findOne(query);
+      res.send(result);
+    });
     app.post("/addArt", async (req, res) => {
       const cards = req.body;
       const result = await artCollection.insertOne(cards);
       res.send(result);
       console.log(cards);
+    });
+
+    app.put("/update/:id", async (req, res) => {
+      const id = req.params.id;
+      const filter = { _id: new ObjectId(id) };
+      const art = req.body;
+      const options = { upsert: true };
+      const udpadedArt = {
+        $set: {
+          imgUrl: art.imgUrl,
+          name: art.name,
+          subcategory: art.subcategory,
+          shortDes: art.shortDes,
+          pric: art.pric,
+          customaize: art.customaize,
+          rate: art.rate,
+          processTime: art.processTime,
+          stock: art.stock,
+        },
+      };
+      const result = await artCollection.updateOne(filter,udpadedArt,options);
+      res.send(result)
     });
 
     // Send a ping to confirm a successful connection

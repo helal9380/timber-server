@@ -35,12 +35,18 @@ async function run() {
       const result = await cursor.toArray();
       res.send(result);
     });
+    app.get("/myArt/:email", async (req, res) => {
+      const email = req.params.email;
+      const query = { userEmail: email};
+      const result = await artCollection.find(query).toArray();
+      res.send(result);
+    });
 
     app.get("/addArt/:id", async (req, res) => {
       const id = req.params.id;
       const query = { _id: new ObjectId(id) };
       const result = await artCollection.findOne(query);
-      res.send(result)
+      res.send(result);
     });
     app.post("/addArt", async (req, res) => {
       const cards = req.body;

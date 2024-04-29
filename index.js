@@ -30,6 +30,7 @@ async function run() {
     await client.connect();
 
     const artCollection = client.db("artCraftDB").collection("artCraft");
+    const subcategoryCollection = client.db("artCraftDB").collection("subcategories");
     app.get("/addArt", async (req, res) => {
       const cursor = artCollection.find();
       const result = await cursor.toArray();
@@ -38,6 +39,19 @@ async function run() {
     app.get("/myArt/:email", async (req, res) => {
       const email = req.params.email;
       const query = { userEmail: email };
+      const result = await artCollection.find(query).toArray();
+      res.send(result);
+    });
+
+    app.get("/category", async(req,res) => {
+      const cursor = artCollection.find();
+      const result = await cursor.toArray();
+      res.send(result)
+    })
+
+    app.get("/category/:id", async (req, res) => {
+      const subCategory = req.params.id;
+      const query = { id: subCategory };
       const result = await artCollection.find(query).toArray();
       res.send(result);
     });
@@ -54,6 +68,7 @@ async function run() {
       const result = await artCollection.findOne(query);
       res.send(result);
     });
+
     app.post("/addArt", async (req, res) => {
       const cards = req.body;
       const result = await artCollection.insertOne(cards);

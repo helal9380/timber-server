@@ -57,7 +57,7 @@ async function run() {
     app.get("/category/:id", async (req, res) => {
       const subCategory = req.params.id;
       const query = { id: subCategory };
-      const result = await subcategoryCollection.find(query).toArray();
+      const result = await artCollection.find(query).toArray();
       res.send(result);
     });
 
